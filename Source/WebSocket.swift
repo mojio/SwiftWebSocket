@@ -1031,7 +1031,7 @@ private class InnerWebSocket: Hashable {
 			security = .none
 		}
 
-		var path = CFURLCopyPath(req.url! as CFURL!) as String
+        var path = CFURLCopyPath(req.url! as CFURL?) as String
         if path == "" {
             path = "/"
         }
@@ -1065,7 +1065,7 @@ private class InnerWebSocket: Hashable {
         var (rdo, wro) : (InputStream?, OutputStream?)
         var readStream:  Unmanaged<CFReadStream>?
         var writeStream: Unmanaged<CFWriteStream>?
-        CFStreamCreatePairWithSocketToHost(nil, addr[0] as CFString!, UInt32(Int(addr[1])!), &readStream, &writeStream);
+        CFStreamCreatePairWithSocketToHost(nil, addr[0] as CFString?, UInt32(Int(addr[1])!), &readStream, &writeStream);
         rdo = readStream!.takeRetainedValue()
         wro = writeStream!.takeRetainedValue()
         (rd, wr) = (rdo!, wro!)
@@ -1151,8 +1151,8 @@ private class InnerWebSocket: Hashable {
                 } else {
                     key = ""
                     if let r = line.range(of: ":") {
-                        key = trim(line.substring(to: r.lowerBound))
-                        value = trim(line.substring(from: r.upperBound))
+                        key = trim(String(line.prefix(upTo: r.lowerBound)))
+                        value = trim(String(line.suffix(from: r.upperBound)))
                     }
                 }
                 
@@ -1220,7 +1220,7 @@ private class InnerWebSocket: Hashable {
     
     private func publicKeys(from trust: SecTrust) -> [SecKey] {
         let policy = SecPolicyCreateBasicX509()
-        let keys = (0..<SecTrustGetCertificateCount(trust)).flatMap { (index:Int) -> SecKey? in
+        let keys = (0..<SecTrustGetCertificateCount(trust)).compactMap { (index:Int) -> SecKey? in
             let cert = SecTrustGetCertificateAtIndex(trust, index)
             return extractPublicKey(cert!, policy: policy)
         }
