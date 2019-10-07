@@ -352,10 +352,9 @@
 			};
 			buildConfigurationList = 03D1E6FD1B20897100AC49AC /* Build configuration list for PBXProject "SwiftWebSocket" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
 				Base,
 			);
