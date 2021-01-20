@@ -914,9 +914,9 @@ private class InnerWebSocket: Hashable {
             }
         }
     }
-    @inline(__always) func fire(_ block: ()->()){
+    @inline(__always) func fire(_ block: @escaping ()->()){
         if let queue = eventQueue {
-            queue.sync {
+            queue.async {
                 block()
             }
         } else {
